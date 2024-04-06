@@ -145,9 +145,15 @@
     }
 
     document.addEventListener('click', function() {
+		if(document.getElementById('waitText').style.display === 'flex' || settingName){
+			return;
+		}
 		flow();
 	});
 	document.addEventListener('keydown', function (event) {
+		if(document.getElementById('waitText').style.display === 'flex' || settingName){
+			return;
+		}
 		if (event.code === 'Space') {
 			flow();
 		}
