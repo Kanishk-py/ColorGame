@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reaction Time Test</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        cursor: pointer;
+		background-color: blue;
+		font-size: 3rem;
+		font-family: 'Courier New', Courier, monospace;
+    }
+
+	div{
+		height: 100vh;
+		display: flex;
+		width: 100vw;
+		justify-content: center;
+		align-items: center;
+		padding: 1rem;
+	}
+	
+    /* #startText {
+        font-size: 24px;
+    } */
+
+    #waitText {
+        display: none;
+		background-color: red;
+    }
+
+    #greenScreen {
+        display: none;
+        background-color: green;
+    }
+
+    #resultText {
+        display: none;
+    }
+
+	#highScoreText {
+		display: none;
+		flex-direction: column;
+	}
+
+	#nameInput{
+		display: block;
+		margin: 1rem;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		border: none;
+	}
+	#highscoreBtn{
+		padding: 0.5rem 1rem;
+		border: none;
+		border-radius: 0.5rem;
+		background-color: rgb(3, 177, 3);
+		color: white;
+		cursor: pointer;
+	}
+</style>
+</head>
+<body>
+<div id="startText">When the screen turns green click to measure your reaction time. <br/><br/>Click anywhere to start</div>
+<div id="waitText">Wait for the screen to turn green...</div>
+<div id="greenScreen">Click!!!</div>
+<div id="resultText"></div>
+<div id="highScoreText"></div>
+
+<script>
+    var startTime = 0;
+    var fastestReactionTime = Infinity;
+    var highScoreName = "";
+	var settingName = false;
+
+	function intialSetup(){
+		document.getElementById('startText').style.display = 'flex';
+        document.getElementById('greenScreen').style.display = 'none';
+        document.getElementById('resultText').style.display = 'none';
+        document.getElementById('waitText').style.display = 'none';
+		document.getElementById('highScoreText').style.display = 'none';
+		startTime = 0;
+	}
+
+    function startTest() {
+        document.getElementById('startText').style.display = 'none';
+        document.getElementById('waitText').style.display = 'flex';
+
+        // Show green screen after a random delay (1-5 seconds)
+        var delay = Math.floor(Math.random() * 4000) + 1000;
+        setTimeout(function() {
+            document.getElementById('waitText').style.display = 'none';
+            document.getElementById('greenScreen').style.display = 'flex';
+            startTime = new Date();
+        }, delay);
+    }
+
+    function endTest() {
+        var endTime = new Date();
+        var reactionTime = endTime - startTime;
+        document.getElementById('greenScreen').style.display = 'none';
+        document.getElementById('resultText').innerHTML = 'Your reaction time: ' + reactionTime + ' milliseconds' + '<br/><br/>Fastest reaction time: ' + fastestReactionTime + ' milliseconds' + ' (by ' + highScoreName + ')';
+        document.getElementById('resultText').style.display = 'flex';
+		startTime = -1;
+
+		if (reactionTime < fastestReactionTime) {
+            fastestReactionTime = reactionTime;
+            document.getElementById('highScoreText').innerHTML = 'New highscore! Enter your name: <br/> <input type="text" id="nameInput"><button id="highscoreBtn" onclick="setHighScore()">Set Highscore</button>';
+            document.getElementById('highScoreText').style.display = 'flex';
+			settingName = true;
+
+        }
+    }
+
+	function setHighScore() {
+        highScoreName = document.getElementById('nameInput').value.trim();
+        // document.getElementById('highScoreText').innerHTML = 'Fastest reaction time: ' + fastestReactionTime + ' milliseconds (by ' + highScoreName + ')';
+		// Save highScoreName and reaction time to local storage
+		localStorage.setItem('highScoreName', highScoreName);
+		localStorage.setItem('fastestReactionTime', fastestReactionTime);
+		settingName = false;
+
+    }
+
+	function flow() {
+		if(settingName){
+			return;
+		}
+        if (startTime === -1) {
+			intialSetup();
+		} else if (startTime === 0) {
+            startTest();
+        } else {
+            endTest();
+        }
+    }
+
+    document.addEventListener('click', function() {
+		flow();
+	});
+	document.addEventListener('keydown', function (event) {
+		if (event.code === 'Space') {
+			flow();
+		}
+	});
+</script>
+</body>
+</html>
