@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Color Game</title>
+	<style>
+		body {
+			margin: 0;
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-family: Arial, sans-serif;
+			text-align: center;
+		}
+
+		#colorText {
+			font-size: 8rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			/* text-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 1); */
+			-webkit-text-stroke: 8px black;
+			display: flex;
+		}
+
+		#colorText div {
+			width: calc(100vw / 11);
+			height: 100vh;
+			padding: 0;
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="colorText">
+		<div style="background-color: Red;"></div>
+		<div style="background-color: Orange;"></div>
+		<div style="background-color: Yellow;"></div>
+		<div style="background-color: Green;"></div>
+		<div style="background-color: Blue;"></div>
+		<div style="background-color: indigo;"></div>
+		<div style="background-color: violet;"></div>
+		<div style="background-color: Pink;"></div>
+		<div style="background-color: brown;"></div>
+		<div style="background-color: Black;"></div>
+		<div style="background-color: White;"></div>
+	</div>
+	
+	<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+	<script>
+		// Make a random seed
+		var myrng = new Math.seedrandom('Lipika');
+		var i = 1;
+
+		function getRandomColor() {
+			const letters = '0123456789ABCDEF';
+			let color = '#';
+			for (let i = 0; i < 6; i++) {
+				color += letters[Math.floor(myrng() * 16)];
+			}
+			return color;
+		}
+
+		function getRandomColorName() {
+			const colorNames = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet', 'Pink', 'Brown', 'Black', 'White'];
+			return colorNames[Math.floor(myrng() * colorNames.length)];
+		}
+
+		function updateColor() {
+			const bgColor = getRandomColor();
+			const textColor = getRandomColorName();
+			const colorName = getRandomColorName();
+
+			document.body.style.backgroundColor = bgColor;
+			document.getElementById('colorText').style.color = textColor;
+			document.getElementById('colorText').innerHTML = colorName;
+
+			console.log(i, textColor);
+			i++;
+		}
+
+		document.addEventListener('keydown', function (event) {
+			if (event.code === 'Space') {
+				updateColor();
+			}
+		});
+
+		document.addEventListener('click', function () {
+			updateColor();
+		});
+
+		// Initial color setup
+		// updateColor();
+	</script>
+</body>
+
+</html>
